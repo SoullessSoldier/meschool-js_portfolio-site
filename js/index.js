@@ -11,7 +11,7 @@ const disableScroll = () => {
         left: 0;
         height: 100vh;
         width: 100vw;
-        padding-right: ${widthScroll}; 
+        padding-right: ${widthScroll}px; 
     `;
 };
 
@@ -102,4 +102,41 @@ const enableScroll = () => {
 
     handlerBurger(headerContactsBurger, headerContacts, 'header__contacts_open')
     
+}
+
+{//Галерея
+    const portfolioList = document.querySelector('.portfolio__list');
+    const pageOverlay = document.createElement('div');
+    
+    pageOverlay.classList.add('page__overlay');
+    portfolioList.addEventListener('click', (e) => {
+        const target = e.target,
+            card = target.closest('.card');
+        if(card) {
+            document.body.append(pageOverlay);
+            const title = card.querySelector('.card__client').textContent;
+            const picture = document.createElement('picture');
+            picture.style.cssText = `
+                position: absolute;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 90%;
+                max-width: 1440px;
+            `;
+            picture.innerHTML = `
+                <source srcset="${card.dataset.fullImage}.avif" type="image/avif">
+                <source srcset="${card.dataset.fullImage}.webp" type="image/webp">
+                <img src="${card.dataset.fullImage}.jpg" alt="${title}">
+            `;
+            pageOverlay.append(picture);
+            disableScroll();
+        }
+    });
+    pageOverlay.addEventListener('click', () => {
+        pageOverlay.remove();
+        pageOverlay.textContent = '';
+        enableScroll();
+    });
+
 }
